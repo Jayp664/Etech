@@ -1,0 +1,148 @@
+{% extends 'customer/base.html' %} {% load static %} 
+{% block title %}E-tech -Add to Cart {% endblock title %}
+{% block content%}
+<div class="Shopping-cart-area pt-60 pb-60">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <form action="#">
+          <div class="table-content table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="li-product-remove">remove</th>
+                  <th class="li-product-thumbnail">images</th>
+                  <th class="cart-product-name">Product</th>
+                  <th class="li-product-price">Unit Price</th>
+                  <th class="li-product-quantity">Quantity</th>
+                  <th class="li-product-subtotal">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if product %}
+                {% for product in product %}
+                <tr>
+                  <td class="li-product-remove">
+                    <a href="#"><i class="fa fa-times"></i></a>
+                  </td>
+                  <td class="li-product-thumbnail">
+                    <a href="#"
+                      ><img
+                        src="/media/{{ product.image }}"
+                        alt="Li's Product Image"
+                    /></a>
+                  </td>
+                  <td class="li-product-name">
+                    <a href="#">{{ product.name }}</a>
+                  </td>
+                  <td class="li-product-price">
+                    <span class="amount" id="price{{forloop.counter}}">{{product.price}}</span>
+                  </td>
+                  <td class="quantity">
+                    <label>Quantity</label>
+                    <div class="cart-plus-minus">
+                      <input
+                        class="cart-plus-minus-box"
+                        value="1"
+                        type="text" id="qty{{forloop.counter}}"
+                      />
+                      <div class="dec qtybutton" onclick="decreament({{forloop.counter}})">
+                        <i class="fa fa-angle-down" ></i>
+                      </div>
+                      <div class="inc qtybutton" onclick="increament({{forloop.counter}})">
+                        <i class="fa fa-angle-up"></i>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="product-subtotal">
+                    <span class="amount" id="total{{forloop.counter}}">{{ product.price }}</span>
+                  </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="coupon-all">
+                <div class="coupon">
+                  <input
+                    id="coupon_code"
+                    class="input-text"
+                    name="coupon_code"
+                    value=""
+                    placeholder="Coupon code"
+                    type="text"
+                  />
+                  <input
+                    class="button"
+                    name="apply_coupon"
+                    value="Apply coupon"
+                    type="submit"
+                  />
+                </div>
+                <div class="coupon2">
+                  <input
+                    class="button"
+                    name="update_cart"
+                    value="Update cart"
+                    type="submit"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5 ml-auto">
+              <div class="cart-page-total">
+                <h2>Cart totals</h2>
+                <ul>
+                  <li>Total <span>$130.00</span></li>
+                </ul>
+                <a href="/customer/checkout">Proceed to checkout</a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+
+
+function increament(id){
+  document.getElementById(`qty${id}`).value++
+  updateValue(id);
+}
+function decreament(id){
+  if(document.getElementById(`qty${id}`).value==1){
+    document.getElementById(`qty${id}`).value = 1;
+  }
+  else{
+    document.getElementById(`qty${id}`).value--;
+    updateValue(id);    
+  }
+}
+
+function updateValue(id){
+    let qty = Number.parseInt(document.getElementById(`qty${id}`).value);
+    let price = Number.parseInt(document.getElementById(`price${id}`).innerHTML);
+    let total = qty * price;
+    console.log(total)
+    document.getElementById(`total${id}`).innerHTML = total;
+}
+// console.log('add to cart template')
+
+// let prodIds=localStorage.getItem("prodId");
+// let products=localStorage;
+
+// for (let index = 0; index < prodIds.length ; index++) {
+//   console.log(prodIds[index] + " is " +  products[prodIds[index]]);    
+// }
+
+{% endblock %}
