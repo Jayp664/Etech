@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,HttpResponse
-from customer.models import Contact,Category,SubCategory,Product,addCart
+from customer.models import Contact,Category,SubCategory,Product,customerOrder
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login ,logout
@@ -101,9 +101,6 @@ def product(request,slug):
     context.update({'product':product})
     return render(request,'customer/product.html',context)
 
-def checkout(request):
-    return render(request, 'customer/checkout.html',context)
-
 def wish(request):
     return render(request, 'customer/wish.html',context)
 
@@ -126,3 +123,22 @@ def search(request):
 
 def addCart(request):
     return render(request, 'customer/addCart.html',context)
+
+def checkout(request):
+    if request.method == "POST":
+        email = request.POST['email']      
+        productdetails = request.POST['productdetails']      
+        totalprice = request.POST['totalprice']      
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        address = request.POST['address']+" "+ request.POST['address1']
+        city = request.POST['city']
+        state = request.POST['state']
+        pincode = request.POST['pincode']
+        phone = request.POST['phone']    
+        order=customerOrder(user=request.user,email=email,productdetails=productdetails,totalprice=totalprice,firstname=firstname,lastname=lastname,address=address,city=city,state=state,pincode=pincode,phone=phone)
+        order.save()
+        messages.success(request, "Order Placed Successfully!")
+        context.update({'done':True})
+        return render(request, 'customer/checkout.html',context)
+    return render(request, 'customer/checkout.html',context)

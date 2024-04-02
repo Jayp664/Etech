@@ -120,6 +120,8 @@
 
 if(localStorage.getItem('cart')==null){
   var cart={};
+  localStorage.setItem('cart',JSON.stringify(cart));
+
 }
 else{
   cart = JSON.parse(localStorage.getItem('cart'));

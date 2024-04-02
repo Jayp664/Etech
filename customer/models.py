@@ -23,9 +23,9 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/')
     category = models.ForeignKey(SubCategory,on_delete=models.CASCADE)
     price = models.IntegerField()
-    srtdesc = models.CharField(max_length=225)
-    qty=models.IntegerField(default=50)
-    desc =models.TextField()
+    srtdesc = models.CharField(max_length=225,verbose_name="Short Description")
+    qty=models.IntegerField(default=50,verbose_name="Quantity")
+    desc =models.TextField(verbose_name="Description")
     timestamp= models.DateTimeField(default=now)
     
     def __str__(self):
@@ -42,14 +42,20 @@ class Contact(models.Model):
     def __str__(self):
         return self.sub + " by " + self.email
     
-class orders(models.Model):
-    pass
-
-class addCart(models.Model):
+class customerOrder(models.Model):
+    orderId = models.AutoField(primary_key=True)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    totalprice = models.IntegerField()
-
-class Order(models.Model):
-    pass
+    email = models.CharField(max_length=255)
+    productdetails = models.TextField(verbose_name="Product Details")
+    totalprice = models.IntegerField(verbose_name="Total Price")
+    firstname = models.CharField(max_length=100,verbose_name="First name")
+    lastname = models.CharField(max_length=100,verbose_name="Last name")
+    address = models.TextField()
+    city = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
+    pincode = models.IntegerField()
+    phone = models.CharField(max_length=15)
+    
+    def __str__(self):
+        return self.email
+    

@@ -1,6 +1,6 @@
-{% extends 'customer/base.html' %} {% load static %} 
-{% block title %}E-tech -Add to Cart {% endblock title %}
-{% block content%}
+{% extends 'customer/base.html' %} {% load static %}
+{% block title %} E - tech - Add to Cart {% endblock title %}
+{% block content %}
 <div class="Shopping-cart-area pt-60 pb-60">
   <div class="container">
     <div class="row">
@@ -10,8 +10,6 @@
             <table class="table" id="table">
               <thead>
                 <tr>
-                  <th class="li-product-remove">remove</th>
-                  <th class="li-product-thumbnail">images</th>
                   <th class="cart-product-name">Product</th>
                   <th class="li-product-price">Unit Price</th>
                   <th class="li-product-quantity">Quantity</th>
@@ -19,11 +17,11 @@
                 </tr>
               </thead>
               <tbody id="tHead">
-                
+
               </tbody>
             </table>
           </div>
-          <div class="row">
+          <!--<div class="row">
             <div class="col-12">
               <div class="coupon-all">
                 <div class="coupon">
@@ -52,13 +50,13 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div>-->
           <div class="row">
             <div class="col-md-5 ml-auto">
               <div class="cart-page-total">
                 <h2>Cart totals</h2>
                 <ul>
-                  <li>Total <span id="cartTotal">12</span></li>
+                  <li>Total <span id="finalTotal">12</span></li>
                 </ul>
                 <a href="/customer/checkout">Proceed to checkout</a>
               </div>
@@ -73,78 +71,54 @@
 
 {% block js %}
 
-let sum = 0;
-
-console.log("total is "+sum);
-
-
-
-function increament(id){
+function increament(id) {
   document.getElementById(`qty${id}`).value++
   updateValue(id);
 }
-function decreament(id){
-  if(document.getElementById(`qty${id}`).value==1){
+function decreament(id) {
+  if (document.getElementById(`qty${id}`).value == 1) {
     document.getElementById(`qty${id}`).value = 1;
   }
-  else{
+  else {
     document.getElementById(`qty${id}`).value--;
-    updateValue(id);    
+    updateValue(id);
   }
 }
 
-function updateValue(id){
-    let qty = Number.parseInt(document.getElementById(`qty${id}`).value);
-    let price = Number.parseInt(document.getElementById(`price${id}`).innerHTML);
-    let total = qty * price;
-    console.log(total)
-    document.getElementById(`total${id}`).innerHTML = total;
-    sum = sum + total;
-console.log("total is "+sum);
-document.getElementById('cartTotal').innerHTML = sum;
-
-
+function updateValue(id) {
+  let qty = Number.parseInt(document.getElementById(`qty${id}`).value);
+  let price = Number.parseInt(document.getElementById(`price${id}`).innerHTML);
+  let total = qty * price;
+  document.getElementById(`total${id}`).innerHTML = total;
+  findFinalTotal();
+  updateCart(id);
 }
 
-
-if(localStorage.getItem('cart')==null){
-  let myStr= `<h1> Add Some Items Before Checkout </h1>`;
-  $('#table').innerHTML = myStr
+if (localStorage.getItem('cart') == null) {
+  let myStr = `<h1> Add Some Items Before Checkout </h1>`;
+  $('#table').innerHTML = myStr;
 }
-else{
+else {
   cart = JSON.parse(localStorage.getItem('cart'));
   document.getElementById('cartTotal').innerHTML = Object.keys(cart).length;
 }
 
-console.log(cart);
 
 if ($.isEmptyObject(cart)) {
-
-    mystr = `Your cart is empty ,plaese add some items to your cart before checking out !`;
-    document.getElementById('items').innerHTML = mystr;
+  mystr = `Your cart is empty ,plaese add some items to your cart before checking out !`;
+  document.getElementById('items').innerHTML = mystr;
 
 }
 else {
 
-    for (item in cart) {
-      let name = cart[item][0];
-      let price = cart[item][1];
-      let qty = cart[item][2];
+  for (item in cart) {
+    let name = cart[item][0];
+    let price = cart[item][1];
 
-      let id = item.substring(2,);
+    let id = item.substring(2,);
 
-      console.log(id);
+    mystr = `  <tr>
       
-
-        
-        mystr = `  <tr>
-        <td class="li-product-remove">
-          <a href="#"><i class="fa fa-times"></i></a>
-        </td>
-        <td class="li-product-thumbnail">
-          <a href="#"
-            ></a>
-        </td>
         <td class="li-product-name">
           <a href="#"> ${name} </a>
         </td>
@@ -171,16 +145,27 @@ else {
           <div class="amount" id="total${id}">${price}</div>
         </td>
       </tr>`;
-        $('#tHead').append(mystr);
-        sum = sum + price;
-    console.log("total is "+sum);
-    document.getElementById('cartTotal').innerHTML = sum;
-
-
-    }
-    // document.getElementById('total').innerHTML = "₹" + sum;
-
-    document.getElementById('cartTotal').innerHTML = sum;
-
+    $('#tHead').append(mystr);
+  }
+  findFinalTotal();
 }
+
+function findFinalTotal() {
+  let sum = 0;
+
+  for (item in cart) {
+    let id = item.substring(2,);
+    sum += Number.parseInt(document.getElementById(`total${id}`).innerHTML.trim());
+  }
+  document.getElementById('finalTotal').innerHTML = sum;
+  localStorage.setItem('total',sum);
+}
+
+function updateCart(id) {
+  var idstr = "pr" + id;
+  cart[idstr][2] = Number.parseInt(document.getElementById(`qty${id}`).value);
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+
 {% endblock %}
