@@ -154,7 +154,7 @@ document.getElementById('amount').innerHTML = localStorage.getItem("total");
 document.getElementById('productdetails').value = cart = JSON.stringify(cart);
 
 {% if done %}
-    alert("Thanks for ordering with us. Your order id is . Use it to track your order using our order tracker")
+    alert("Thanks for ordering with us.")
     localStorage.clear();
     document.location = "/customer";
     {% endif %}
