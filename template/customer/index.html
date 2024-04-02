@@ -66,7 +66,7 @@
                           {% if user.is_authenticated %}
 
                             <li class="add-cart active">
-                                  <a   class="cart" id="pr{{product.pid}}">Add to cart</a>
+                                  <a href="/customer/addCart" class="cart" id="pr{{product.pid}}">Add to cart</a>
                             </li>
                             {% else %}
                             
@@ -98,7 +98,7 @@
                   </div>
 
                   {% endfor %}
-
+  
 
 
 
@@ -130,11 +130,19 @@ $('.cart').click(function(){
   var idstr = this.id.toString();  
   console.log(idstr);
 
+  let ID = idstr.substring(2,);
+
+  let name = document.getElementById(`prodName${ID}`).innerHTML.trim();
+  let price = Number.parseInt(document.getElementById(`prodPrice${ID}`).innerHTML.trim().substring(1,));
+  let qty = 1;
+  console.log(name+price);
+
+
   // if(cart[idstr] != undefined){
   //   cart[idstr] = cart[idstr] + 1;
   // }
   // else{
-    cart[idstr] = 1;
+    cart[idstr] = [name,price,qty];
   // }
 
   console.log(cart);

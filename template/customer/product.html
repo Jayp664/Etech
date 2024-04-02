@@ -37,6 +37,7 @@
             </div>
             <div class="single-add-to-cart">
               <form action="#" class="cart-quantity">
+                {% if user.is_authenticated %}
                 <div class="quantity">
                   <label>Quantity</label>
                   <div class="cart-plus-minus">
@@ -49,7 +50,13 @@
                     </div>
                   </div>
                 </div>
-                <button class="add-to-cart" type="submit">Add to cart</button>
+
+               <button class="add-to-cart" type="submit" >Add to cart</button>
+                            {% else %}
+
+                            <h1>Please Login To buy Products</h1>
+
+                            {% endif %}
               </form>
             </div>
           </div>

@@ -62,9 +62,17 @@
                         </div>
                         <div class="add-actions">
                           <ul class="add-actions-link">
+                            {% if user.is_authenticated %}
+
                             <li class="add-cart active">
-                              <a href="shopping-cart.html">Add to cart</a>
+                                  <a href="/customer/addCart" class="cart" id="pr{{product.pid}}">Add to cart</a>
                             </li>
+                            {% else %}
+                            
+                            <li class="add-cart active">
+                                  <a href="/customer/login" >Add to cart</a>
+                            </li>
+                            {% endif %}
                             <li>
                               <a
                                 href="#"

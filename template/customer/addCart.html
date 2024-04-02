@@ -7,7 +7,7 @@
       <div class="col-12">
         <form action="#">
           <div class="table-content table-responsive">
-            <table class="table">
+            <table class="table" id="table">
               <thead>
                 <tr>
                   <th class="li-product-remove">remove</th>
@@ -18,48 +18,8 @@
                   <th class="li-product-subtotal">Total</th>
                 </tr>
               </thead>
-              <tbody>
-                {% if product %}
-                {% for product in product %}
-                <tr>
-                  <td class="li-product-remove">
-                    <a href="#"><i class="fa fa-times"></i></a>
-                  </td>
-                  <td class="li-product-thumbnail">
-                    <a href="#"
-                      ><img
-                        src="/media/{{ product.image }}"
-                        alt="Li's Product Image"
-                    /></a>
-                  </td>
-                  <td class="li-product-name">
-                    <a href="#">{{ product.name }}</a>
-                  </td>
-                  <td class="li-product-price">
-                    <span class="amount" id="price{{forloop.counter}}">{{product.price}}</span>
-                  </td>
-                  <td class="quantity">
-                    <label>Quantity</label>
-                    <div class="cart-plus-minus">
-                      <input
-                        class="cart-plus-minus-box"
-                        value="1"
-                        type="text" id="qty{{forloop.counter}}"
-                      />
-                      <div class="dec qtybutton" onclick="decreament({{forloop.counter}})">
-                        <i class="fa fa-angle-down" ></i>
-                      </div>
-                      <div class="inc qtybutton" onclick="increament({{forloop.counter}})">
-                        <i class="fa fa-angle-up"></i>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="product-subtotal">
-                    <span class="amount" id="total{{forloop.counter}}">{{ product.price }}</span>
-                  </td>
-                </tr>
-                {% endfor %}
-                {% endif %}
+              <tbody id="tHead">
+                
               </tbody>
             </table>
           </div>
@@ -98,7 +58,7 @@
               <div class="cart-page-total">
                 <h2>Cart totals</h2>
                 <ul>
-                  <li>Total <span>$130.00</span></li>
+                  <li>Total <span id="cartTotal">12</span></li>
                 </ul>
                 <a href="/customer/checkout">Proceed to checkout</a>
               </div>
@@ -112,6 +72,10 @@
 {% endblock %}
 
 {% block js %}
+
+let sum = 0;
+
+console.log("total is "+sum);
 
 
 
@@ -135,14 +99,88 @@ function updateValue(id){
     let total = qty * price;
     console.log(total)
     document.getElementById(`total${id}`).innerHTML = total;
+    sum = sum + total;
+console.log("total is "+sum);
+document.getElementById('cartTotal').innerHTML = sum;
+
+
 }
-// console.log('add to cart template')
 
-// let prodIds=localStorage.getItem("prodId");
-// let products=localStorage;
 
-// for (let index = 0; index < prodIds.length ; index++) {
-//   console.log(prodIds[index] + " is " +  products[prodIds[index]]);    
-// }
+if(localStorage.getItem('cart')==null){
+  let myStr= `<h1> Add Some Items Before Checkout </h1>`;
+  $('#table').innerHTML = myStr
+}
+else{
+  cart = JSON.parse(localStorage.getItem('cart'));
+  document.getElementById('cartTotal').innerHTML = Object.keys(cart).length;
+}
 
+console.log(cart);
+
+if ($.isEmptyObject(cart)) {
+
+    mystr = `Your cart is empty ,plaese add some items to your cart before checking out !`;
+    document.getElementById('items').innerHTML = mystr;
+
+}
+else {
+
+    for (item in cart) {
+      let name = cart[item][0];
+      let price = cart[item][1];
+      let qty = cart[item][2];
+
+      let id = item.substring(2,);
+
+      console.log(id);
+      
+
+        
+        mystr = `  <tr>
+        <td class="li-product-remove">
+          <a href="#"><i class="fa fa-times"></i></a>
+        </td>
+        <td class="li-product-thumbnail">
+          <a href="#"
+            ></a>
+        </td>
+        <td class="li-product-name">
+          <a href="#"> ${name} </a>
+        </td>
+        <td class="li-product-price">
+          <span class="amount" id="price${id}">${price}</span>
+        </td>
+        <td class="quantity">
+          <label>Quantity</label>
+          <div class="cart-plus-minus">
+            <input
+              class="cart-plus-minus-box"
+              value="1"
+              type="text" id="qty${id}"
+            />
+            <div class="dec qtybutton" onclick="decreament(${id})">
+              <i class="fa fa-angle-down" ></i>
+            </div>
+            <div class="inc qtybutton" onclick="increament(${id})">
+              <i class="fa fa-angle-up"></i>
+            </div>
+          </div>
+        </td>
+        <td class="product-subtotal">
+          <div class="amount" id="total${id}">${price}</div>
+        </td>
+      </tr>`;
+        $('#tHead').append(mystr);
+        sum = sum + price;
+    console.log("total is "+sum);
+    document.getElementById('cartTotal').innerHTML = sum;
+
+
+    }
+    // document.getElementById('total').innerHTML = "₹" + sum;
+
+    document.getElementById('cartTotal').innerHTML = sum;
+
+}
 {% endblock %}
